@@ -293,13 +293,21 @@ class Hierarchical(object):
     """
 
     def __init__(self, data, is_group_model=None, depends_on=None, trace_subjs=True,
-                 plot_subjs=False, plot_var=False, group_only_nodes=()):
+                 plot_subjs=False, plot_var=False, group_only_nodes=(),
+                 random_seed=None):
         # Init
         self.plot_subjs = plot_subjs
         self.depends_on = depends_on
         self.mc = None
         self.data = pd.DataFrame(data)
         self.group_only_nodes = group_only_nodes
+
+        ### DG ADDITION ###
+        if random_seed is not None:
+            print("1. random seed baby! ", random_seed)
+            self.random_seed = random_seed
+            np.random.seed(self.random_seed)
+        ### DG ADDITION ###
 
         if not depends_on:
             depends_on = {}
@@ -545,8 +553,10 @@ class Hierarchical(object):
 
             The rest of the arguments are forwards to pymc.MCMC
         """
-
-        self.mc = pm.MCMC(self.nodes_db.node.values, *args, **kwargs)
+        ### DG ADDITION ###
+        # self.mc = pm.MCMC(self.nodes_db.node.values, *args, **kwargs)
+        self.mc = pm.MCMC(self.nodes_db.node.values, random_seed=self.random_seed, *args, **kwargs)
+        ### DG ADDITION ###
 
         self.pre_sample()
 
