@@ -306,7 +306,6 @@ class Hierarchical(object):
         if random_seed is not None:
             print("1. random seed baby! ", random_seed)
             self.random_seed = random_seed
-            np.random.seed(self.random_seed)
         ### DG ADDITION ###
 
         if not depends_on:
